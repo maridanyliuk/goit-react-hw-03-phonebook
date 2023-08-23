@@ -4,6 +4,7 @@ import { GlobalStyle } from './GlobalStyle';
 import { ContactList } from './ContactList/ContactList';
 import { Filter } from './Filter/Filter';
 
+
 export class App extends Component {
   state = {
     contacts: [
@@ -14,6 +15,21 @@ export class App extends Component {
     ],
     filter: '',
   };
+
+  componentDidMount() {
+    const savedContacts = localStorage.getItem('contacts');
+    if (savedContacts !== null) {
+      this.setState({ contacts: JSON.parse(savedContacts) });
+    } else {
+      this.setState({ contacts: this.state.contacts });
+    }
+  }
+
+  componentDidUpdate(_, prevState) {
+    if (prevState.contacts !== this.state.contacts) {
+      localStorage.setItem('contacts', JSON.stringify(this.state.contacts));
+    }
+  }
 
   onChangeInput = e => {
     const { name, value } = e.currentTarget;
